@@ -82,7 +82,7 @@
 
         async function loadQuestions() {
             try {
-                let url = `http://localhost:5000/questions/${topicId}?limit=${limit}&difficulty=${difficulty}`;
+                let url = `https://it-prep-hub-production.up.railway.app/questions/${topicId}?limit=${limit}&difficulty=${difficulty}`;
                 let res = await fetch(url);
                 let data = await res.json();
 
@@ -234,7 +234,7 @@
 
         async function saveResult(userId, topicId, score, total, time) {
             try {
-                await fetch('http://localhost:5000/results/save', {
+                await fetch('https://it-prep-hub-production.up.railway.app/results/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

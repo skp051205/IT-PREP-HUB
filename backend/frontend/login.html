@@ -60,7 +60,7 @@
             }
 
             try {
-                let res = await fetch('http://localhost:5000/auth/login', {
+                let res = await fetch('https://it-prep-hub-production.up.railway.app/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })

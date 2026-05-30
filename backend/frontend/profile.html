@@ -150,7 +150,7 @@
 
         async function loadProfile(uid) {
             try {
-                let res = await fetch('http://localhost:5000/results/profile/' + uid);
+                let res = await fetch('https://it-prep-hub-production.up.railway.app/results/profile/' + uid);
                 let data = await res.json();
 
                 if(!data.success) return;
