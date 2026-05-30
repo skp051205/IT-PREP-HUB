@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - IT Prep Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🎯 IT Prep Hub</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="topics.html">Topics</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <span id="navUser" style="color:#6c63ff; margin-left:25px;"></span>
+            <a href="profile.html" id="profileBtn" style="display:none; margin-left:25px;">👤 Profile</a>
+            <a href="#" id="logoutBtn" onclick="logout()" style="display:none; margin-left:25px;">Logout</a>
+            <a href="login.html" id="loginBtn">Login</a>
+        </div>
+    </nav>
+
+    <div class="leaderboard-container">
+        <h2>🏆 Weekly Leaderboard</h2>
+        <p style="text-align:center; color:#aaaaaa; margin-bottom:10px;">
+            Top 5 users every week level up! 🚀
+        </p>
+
+        <!-- Weekly Timer -->
+        <div style="text-align:center; margin-bottom:30px;">
+            <div style="display:inline-block; background:#1a1a2e; padding:15px 30px;
+                        border-radius:12px; border:1px solid #6c63ff;">
+                <span style="color:#aaaaaa; font-size:14px;">Week resets in: </span>
+                <span id="weekTimer" style="color:#6c63ff; font-weight:bold; font-size:18px;">
+                    Loading...
+                </span>
+            </div>
+        </div>
+
+        <!-- Level Info -->
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;
+                    max-width:900px; margin:0 auto 40px;">
+            <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                        border:1px solid #2a2a4a; text-align:center;">
+                <div style="font-size:24px;">🌱</div>
+                <div style="color:#6c63ff; font-weight:bold;">Beginner</div>
+                <div style="color:#aaaaaa; font-size:12px;">Level 1</div>
+            </div>
+            <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                        border:1px solid #2a2a4a; text-align:center;">
+                <div style="font-size:24px;">🧭</div>
+                <div style="color:#6c63ff; font-weight:bold;">Explorer</div>
+                <div style="color:#aaaaaa; font-size:12px;">Level 2</div>
+            </div>
+            <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                        border:1px solid #2a2a4a; text-align:center;">
+                <div style="font-size:24px;">⚔️</div>
+                <div style="color:#6c63ff; font-weight:bold;">Challenger</div>
+                <div style="color:#aaaaaa; font-size:12px;">Level 3</div>
+            </div>
+            <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                        border:1px solid #2a2a4a; text-align:center;">
+                <div style="font-size:24px;">🏆</div>
+                <div style="color:#6c63ff; font-weight:bold;">Legend</div>
+                <div style="color:#aaaaaa; font-size:12px;">Level 7</div>
+            </div>
+        </div>
+
+        <!-- Top 5 Banner -->
+        <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);
+                    border:1px solid #6c63ff; border-radius:12px;
+                    padding:15px 25px; margin-bottom:25px; text-align:center;">
+            <span style="color:#ffd700; font-size:16px;">
+                ⭐ Top 5 users this week will LEVEL UP and earn exclusive rewards!
+            </span>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Badge</th>
+                    <th>Level</th>
+                    <th>Weekly Points</th>
+                    <th>Total Points</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <tr>
+                    <td colspan="7" style="text-align:center; color:#aaaaaa;">
+                        Loading...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Rewards Info -->
+        <div style="margin-top:40px;">
+            <h3 style="color:#6c63ff; text-align:center; margin-bottom:20px;">
+                🎁 Level Up Rewards
+            </h3>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr);
+                        gap:20px; max-width:900px; margin:0 auto;">
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #2a2a4a;">
+                    <div style="color:#6c63ff; font-weight:bold; margin-bottom:8px;">
+                        🧭 Level 2 — Explorer
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Explorer Badge + 100 Bonus Points
+                    </div>
+                </div>
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #2a2a4a;">
+                    <div style="color:#6c63ff; font-weight:bold; margin-bottom:8px;">
+                        ⚔️ Level 3 — Challenger
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Challenger Badge + 200 Bonus Points
+                    </div>
+                </div>
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #2a2a4a;">
+                    <div style="color:#6c63ff; font-weight:bold; margin-bottom:8px;">
+                        🎯 Level 4 — Expert
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Expert Badge + Special Topics Unlock
+                    </div>
+                </div>
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #2a2a4a;">
+                    <div style="color:#6c63ff; font-weight:bold; margin-bottom:8px;">
+                        🧠 Level 5 — Master
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Master Badge + Mock Interview Questions
+                    </div>
+                </div>
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #2a2a4a;">
+                    <div style="color:#6c63ff; font-weight:bold; margin-bottom:8px;">
+                        👑 Level 6 — Elite
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Elite Badge + Resume Tips PDF
+                    </div>
+                </div>
+                <div style="background:#1a1a2e; padding:20px; border-radius:12px;
+                            border:1px solid #ffd700;">
+                    <div style="color:#ffd700; font-weight:bold; margin-bottom:8px;">
+                        🏆 Level 7 — Legend
+                    </div>
+                    <div style="color:#aaaaaa; font-size:13px;">
+                        Legend Badge + Certificate!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by Saurav Kumar | IT Prep Hub 2026</p>
+    </footer>
+
+    <script>
+        window.onload = function() {
+            let user = JSON.parse(localStorage.getItem('user'));
+            if(user) {
+                document.getElementById('navUser').innerText = '👋 ' + user.name;
+                document.getElementById('logoutBtn').style.display = 'inline';
+                document.getElementById('profileBtn').style.display = 'inline';
+                document.getElementById('loginBtn').style.display = 'none';
+            }
+            loadLeaderboard();
+            startWeekTimer();
+        }
+
+        async function loadLeaderboard() {
+            try {
+                let res = await fetch('http://localhost:5000/results/leaderboard');
+                let data = await res.json();
+                let tbody = document.getElementById('leaderboardBody');
+
+                if(data.success && data.leaderboard.length > 0) {
+                    // unique users by weekly points
+                    let seen = [];
+                    let unique = data.leaderboard.filter(item => {
+                        if(!seen.includes(item.id)) {
+                            seen.push(item.id);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    tbody.innerHTML = unique.map((item, index) => {
+                        let rank = index + 1;
+                        let rankIcon = rank === 1 ? '🥇' :
+                                      rank === 2 ? '🥈' :
+                                      rank === 3 ? '🥉' : rank;
+                        let rankClass = rank <= 3 ? `rank-${rank}` : '';
+                        let status = rank <= 5 ?
+                            '<span style="color:#4caf50; font-weight:bold;">⬆️ Level Up!</span>' :
+                            '<span style="color:#aaaaaa;">Keep Going!</span>';
+
+                        return `
+                            <tr>
+                                <td class="${rankClass}">${rankIcon}</td>
+                                <td>${item.name}</td>
+                                <td>${item.badge || 'Beginner'}</td>
+                                <td>
+                                    <span style="background:#6c63ff; padding:3px 10px;
+                                                 border-radius:12px; font-size:12px;">
+                                        Lv.${item.level || 1}
+                                    </span>
+                                </td>
+                                <td style="color:#ffd700; font-weight:bold;">
+                                    ${item.weekly_points || 0} pts
+                                </td>
+                                <td style="color:#6c63ff;">
+                                    ${item.points || 0} pts
+                                </td>
+                                <td>${status}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align:center; color:#aaaaaa;">
+                                No results yet! Be the first! 🚀
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch(err) {
+                document.getElementById('leaderboardBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; color:#f44336;">
+                            Server not running!
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Week me kitna time bacha
+        function startWeekTimer() {
+            function update() {
+                let now = new Date();
+                let day = now.getDay();
+                let diff = 7 - day;
+                let nextSunday = new Date(now);
+                nextSunday.setDate(now.getDate() + diff);
+                nextSunday.setHours(23, 59, 59, 0);
+
+                let remaining = nextSunday - now;
+                let days = Math.floor(remaining / (1000*60*60*24));
+                let hours = Math.floor((remaining%(1000*60*60*24))/(1000*60*60));
+                let mins = Math.floor((remaining%(1000*60*60))/(1000*60));
+
+                document.getElementById('weekTimer').innerText =
+                    `${days}d ${hours}h ${mins}m`;
+            }
+            update();
+            setInterval(update, 60000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

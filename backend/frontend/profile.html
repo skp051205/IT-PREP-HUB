@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - IT Prep Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🎯 IT Prep Hub</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="topics.html">Topics</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <span id="navUser" style="color:#6c63ff; margin-left:25px;"></span>
+            <a href="#" onclick="logout()" style="margin-left:25px;">Logout</a>
+        </div>
+    </nav>
+
+    <div style="max-width:900px; margin:50px auto; padding:0 20px;">
+
+        <!-- Profile Card -->
+        <div style="background:#1a1a2e; border-radius:16px; padding:40px;
+                    border:1px solid #2a2a4a; margin-bottom:30px; text-align:center;">
+
+            <div style="width:100px; height:100px; border-radius:50%;
+                        background:#6c63ff; display:flex; align-items:center;
+                        justify-content:center; font-size:40px; margin:0 auto 20px;">
+                👤
+            </div>
+
+            <h2 id="userName" style="color:#ffffff; font-size:28px; margin-bottom:5px;">
+                Loading...
+            </h2>
+            <p id="userEmail" style="color:#aaaaaa; margin-bottom:20px;"></p>
+
+            <!-- Badge -->
+            <div id="userBadge" style="display:inline-block; padding:8px 25px;
+                 background:#6c63ff; border-radius:20px; font-size:16px;
+                 font-weight:bold; margin-bottom:20px;">
+                🌱 Beginner
+            </div>
+
+            <!-- Level + Points -->
+            <div style="display:flex; justify-content:center; gap:40px; margin-top:20px;">
+                <div style="text-align:center;">
+                    <div id="userLevel" style="font-size:32px; font-weight:bold; color:#6c63ff;">1</div>
+                    <div style="color:#aaaaaa; font-size:14px;">Level</div>
+                </div>
+                <div style="text-align:center;">
+                    <div id="userPoints" style="font-size:32px; font-weight:bold; color:#ffd700;">0</div>
+                    <div style="color:#aaaaaa; font-size:14px;">Total Points</div>
+                </div>
+                <div style="text-align:center;">
+                    <div id="weeklyPoints" style="font-size:32px; font-weight:bold; color:#4caf50;">0</div>
+                    <div style="color:#aaaaaa; font-size:14px;">Weekly Points</div>
+                </div>
+            </div>
+
+            <!-- Level Progress Bar -->
+            <div style="margin-top:30px;">
+                <div style="display:flex; justify-content:space-between;
+                            color:#aaaaaa; font-size:13px; margin-bottom:8px;">
+                    <span id="levelLabel">Level 1 — Beginner</span>
+                    <span id="nextLevelLabel">Next: Level 2 — Explorer</span>
+                </div>
+                <div style="background:#0f0f1a; border-radius:10px; height:10px;">
+                    <div id="levelBar" style="background:#6c63ff; height:10px;
+                         border-radius:10px; width:0%; transition:width 0.5s;"></div>
+                </div>
+                <div id="pointsNeeded" style="color:#aaaaaa; font-size:12px; margin-top:6px; text-align:right;"></div>
+            </div>
+        </div>
+
+        <!-- Rewards Section -->
+        <div style="background:#1a1a2e; border-radius:16px; padding:30px;
+                    border:1px solid #2a2a4a; margin-bottom:30px;">
+            <h3 style="color:#6c63ff; margin-bottom:20px;">🎁 My Rewards</h3>
+            <div id="rewardsList">
+                <p style="color:#aaaaaa; text-align:center;">No rewards yet — keep practicing! 🚀</p>
+            </div>
+        </div>
+
+        <!-- Quiz History -->
+        <div style="background:#1a1a2e; border-radius:16px; padding:30px;
+                    border:1px solid #2a2a4a;">
+            <h3 style="color:#6c63ff; margin-bottom:20px;">📊 Recent Quiz History</h3>
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding:12px; background:#0f0f1a; color:#aaaaaa;
+                                   text-align:left; font-size:13px;">Topic</th>
+                        <th style="padding:12px; background:#0f0f1a; color:#aaaaaa;
+                                   text-align:left; font-size:13px;">Score</th>
+                        <th style="padding:12px; background:#0f0f1a; color:#aaaaaa;
+                                   text-align:left; font-size:13px;">Accuracy</th>
+                        <th style="padding:12px; background:#0f0f1a; color:#aaaaaa;
+                                   text-align:left; font-size:13px;">Time</th>
+                        <th style="padding:12px; background:#0f0f1a; color:#aaaaaa;
+                                   text-align:left; font-size:13px;">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <tr>
+                        <td colspan="5" style="text-align:center; color:#aaaaaa; padding:20px;">
+                            Loading...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by Saurav Kumar | IT Prep Hub 2026</p>
+    </footer>
+
+    <script>
+        // level thresholds
+        let levels = {
+            1: {name: 'Beginner', min: 0, max: 500},
+            2: {name: 'Explorer', min: 500, max: 1500},
+            3: {name: 'Challenger', min: 1500, max: 3000},
+            4: {name: 'Expert', min: 3000, max: 5000},
+            5: {name: 'Master', min: 5000, max: 8000},
+            6: {name: 'Elite', min: 8000, max: 12000},
+            7: {name: 'Legend', min: 12000, max: 12000}
+        };
+
+        let levelIcons = {
+            1: '🌱', 2: '🧭', 3: '⚔️', 4: '🎯', 5: '🧠', 6: '👑', 7: '🏆'
+        };
+
+        window.onload = function() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if(!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    document.getElementById('navUser').innerText = '👋 ' + user.name;
+    
+    // naam seedha localStorage se dikhao jab tak API load ho
+    document.getElementById('userName').innerText = user.name;
+    
+    loadProfile(user.id);
+}
+
+        async function loadProfile(uid) {
+            try {
+                let res = await fetch('http://localhost:5000/results/profile/' + uid);
+                let data = await res.json();
+
+                if(!data.success) return;
+
+                let u = data.user;
+
+                // basic info
+                document.getElementById('userName').innerText = u.name;
+                document.getElementById('userEmail').innerText = u.email;
+                document.getElementById('userLevel').innerText = u.level || 1;
+                document.getElementById('userPoints').innerText = u.points || 0;
+                document.getElementById('weeklyPoints').innerText = u.weekly_points || 0;
+
+                let lvl = u.level || 1;
+                let icon = levelIcons[lvl] || '🌱';
+                document.getElementById('userBadge').innerText = icon + ' ' + (u.badge || 'Beginner');
+
+                // progress bar
+                updateProgressBar(u.points || 0, lvl);
+
+                // rewards
+                showRewards(data.rewards);
+
+                // history
+                showHistory(data.history);
+
+            } catch(err) {
+                console.log('Profile load error:', err);
+            }
+        }
+
+        function updateProgressBar(points, level) {
+            let curr = levels[level] || levels[1];
+            let next = levels[level + 1];
+
+            document.getElementById('levelLabel').innerText = 
+                'Level ' + level + ' — ' + curr.name;
+
+            if(!next) {
+                document.getElementById('nextLevelLabel').innerText = '🏆 Max Level!';
+                document.getElementById('levelBar').style.width = '100%';
+                document.getElementById('pointsNeeded').innerText = 'You reached the top!';
+                return;
+            }
+
+            document.getElementById('nextLevelLabel').innerText = 
+                'Next: Level ' + (level+1) + ' — ' + next.name;
+
+            let progress = ((points - curr.min) / (next.min - curr.min)) * 100;
+            progress = Math.min(Math.max(progress, 0), 100);
+
+            document.getElementById('levelBar').style.width = progress + '%';
+
+            let needed = next.min - points;
+            if(needed > 0) {
+                document.getElementById('pointsNeeded').innerText = 
+                    needed + ' points needed for next level';
+            } else {
+                document.getElementById('pointsNeeded').innerText = 
+                    'Ready to level up! 🎉';
+            }
+        }
+
+        function showRewards(rewards) {
+            let container = document.getElementById('rewardsList');
+            if(!rewards || rewards.length === 0) {
+                container.innerHTML = '<p style="color:#aaaaaa; text-align:center;">No rewards yet — keep practicing! 🚀</p>';
+                return;
+            }
+
+            container.innerHTML = rewards.map(r => `
+                <div style="background:#0f0f1a; padding:15px 20px; border-radius:10px;
+                            margin-bottom:12px; display:flex; align-items:center; gap:15px;">
+                    <span style="font-size:28px;">🏅</span>
+                    <div>
+                        <div style="color:#ffd700; font-weight:bold; margin-bottom:3px;">
+                            ${r.reward_type}
+                        </div>
+                        <div style="color:#aaaaaa; font-size:13px;">${r.reward_description}</div>
+                        <div style="color:#555; font-size:12px; margin-top:4px;">
+                            ${new Date(r.achieved_at).toLocaleDateString('en-IN')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showHistory(history) {
+            let tbody = document.getElementById('historyBody');
+            if(!history || history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#aaaaaa; padding:20px;">No quiz attempts yet!</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = history.map(h => {
+                let color = h.percentage >= 70 ? '#4caf50' :
+                            h.percentage >= 50 ? '#ff9800' : '#f44336';
+                let date = new Date(h.played_at).toLocaleDateString('en-IN');
+
+                return `
+                    <tr>
+                        <td style="padding:12px; border-bottom:1px solid #2a2a4a; color:#fff;">
+                            ${h.topic_name}
+                        </td>
+                        <td style="padding:12px; border-bottom:1px solid #2a2a4a; color:#aaaaaa;">
+                            ${h.score}/${h.total_questions}
+                        </td>
+                        <td style="padding:12px; border-bottom:1px solid #2a2a4a;">
+                            <span style="color:${color}; font-weight:bold;">${h.percentage}%</span>
+                        </td>
+                        <td style="padding:12px; border-bottom:1px solid #2a2a4a; color:#aaaaaa;">
+                            ${h.time_taken}s
+                        </td>
+                        <td style="padding:12px; border-bottom:1px solid #2a2a4a; color:#aaaaaa;">
+                            ${date}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

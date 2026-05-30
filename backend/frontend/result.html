@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result - IT Prep Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">🎯 IT Prep Hub</div>
+        <div class="nav-links">
+            <a href="topics.html">← Back to Topics</a>
+        </div>
+    </nav>
+
+    <!-- Result Container -->
+    <div class="result-container">
+        <div class="result-box">
+
+            <h2 style="color:#6c63ff; margin-bottom:30px;">Quiz Complete! 🎉</h2>
+
+            <!-- Score Circle -->
+            <div class="score-circle">
+                <div class="percentage" id="percentage">0%</div>
+                <div class="label">Score</div>
+            </div>
+
+            <!-- Grade -->
+            <div class="grade" id="grade"></div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="number" id="correctAns">0</div>
+                    <div class="text">Correct</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="wrongAns">0</div>
+                    <div class="text">Wrong</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="timeTaken">0s</div>
+                    <div class="text">Time Taken</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="pointsEarned" style="color:#ffd700;">+0 pts</div>
+                    <div class="text">Points Earned</div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display:flex; gap:15px; margin-top:30px;">
+                <button class="btn-submit" onclick="tryAgain()">
+                    🔄 Try Again
+                </button>
+                <button class="btn-submit"
+                    onclick="window.location.href='topics.html'"
+                    style="background:transparent; border:2px solid #6c63ff; color:#6c63ff;">
+                    📚 More Topics
+                </button>
+            </div>
+
+            <!-- Leaderboard + Profile Buttons -->
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button onclick="window.location.href='leaderboard.html'"
+                    style="flex:1; padding:12px; background:transparent;
+                           border:1px solid #2a2a4a; color:#aaaaaa;
+                           border-radius:8px; cursor:pointer; font-size:14px;">
+                    🏆 Leaderboard
+                </button>
+                <button onclick="window.location.href='profile.html'"
+                    style="flex:1; padding:12px; background:transparent;
+                           border:1px solid #2a2a4a; color:#aaaaaa;
+                           border-radius:8px; cursor:pointer; font-size:14px;">
+                    👤 My Profile
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            let params = new URLSearchParams(window.location.search);
+            let score = parseInt(params.get('score'));
+            let total = parseInt(params.get('total'));
+            let time = parseInt(params.get('time'));
+            let earnedPoints = params.get('points') || 0;
+
+            let percentage = Math.round((score / total) * 100);
+            let wrong = total - score;
+
+            // display karo
+            document.getElementById('percentage').innerText = percentage + '%';
+            document.getElementById('correctAns').innerText = score;
+            document.getElementById('wrongAns').innerText = wrong;
+            document.getElementById('timeTaken').innerText = time + 's';
+            document.getElementById('pointsEarned').innerText = '+' + earnedPoints + ' pts';
+
+            // grade set karo
+            let grade = '';
+            let color = '';
+            if(percentage >= 90) {
+                grade = '🏆 Excellent!';
+                color = '#ffd700';
+            } else if(percentage >= 70) {
+                grade = '👏 Good Job!';
+                color = '#4caf50';
+            } else if(percentage >= 50) {
+                grade = '👍 Average';
+                color = '#ff9800';
+            } else {
+                grade = '💪 Keep Practicing!';
+                color = '#f44336';
+            }
+
+            let gradeEl = document.getElementById('grade');
+            gradeEl.innerText = grade;
+            gradeEl.style.color = color;
+
+            // score circle color
+            let circle = document.querySelector('.score-circle');
+            circle.style.borderColor = color;
+            document.querySelector('.percentage').style.color = color;
+        }
+
+        function tryAgain() {
+            history.back();
+            history.back();
+        }
+    </script>
+
+</body>
+</html>

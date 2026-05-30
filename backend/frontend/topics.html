@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topics - IT Prep Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">🎯 IT Prep Hub</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="topics.html">Topics</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <span id="navUser" style="color:#6c63ff; margin-left:25px;"></span>
+            <a href="#" id="logoutBtn" onclick="logout()" style="display:none; margin-left:25px;">Logout</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="register.html" id="registerBtn">Register</a>
+        </div>
+    </nav>
+
+    <!-- Topics Section -->
+    <div class="topics-container">
+        <h2>Choose Your Topic</h2>
+        <p>Select a topic and start practicing!</p>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <button class="filter-btn active" onclick="filterTopics('All')">All</button>
+            <button class="filter-btn" onclick="filterTopics('Programming')">Programming</button>
+            <button class="filter-btn" onclick="filterTopics('CS Fundamentals')">CS Fundamentals</button>
+            <button class="filter-btn" onclick="filterTopics('Frontend')">Frontend</button>
+            <button class="filter-btn" onclick="filterTopics('Backend')">Backend</button>
+            <button class="filter-btn" onclick="filterTopics('Database')">Database</button>
+            <button class="filter-btn" onclick="filterTopics('DevOps')">DevOps</button>
+            <button class="filter-btn" onclick="filterTopics('Interview')">Interview</button>
+            <button class="filter-btn" onclick="filterTopics('OOPs')">OOPs</button>
+        </div>
+
+        <!-- Topics Grid -->
+        <div class="topics-grid" id="topicsGrid">
+            <p style="color:#aaaaaa; text-align:center;">Loading topics...</p>
+        </div>
+    </div>
+
+    <!-- Quiz Settings Modal -->
+    <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+         background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#1a1a2e; padding:40px; border-radius:16px; width:400px; border:1px solid #6c63ff;">
+            <h3 style="color:#6c63ff; margin-bottom:25px; text-align:center;">⚙️ Quiz Settings</h3>
+
+            <div class="form-group">
+                <label>Number of Questions</label>
+                <select id="questionCount" style="width:100%; padding:12px; background:#0f0f1a;
+                        border:1px solid #2a2a4a; border-radius:8px; color:white; font-size:15px;">
+                    <option value="5">5 Questions</option>
+                    <option value="10" selected>10 Questions</option>
+                    <option value="15">15 Questions</option>
+                    <option value="20">20 Questions</option>
+                    <option value="30">30 Questions</option>
+                    <option value="50">50 Questions</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Difficulty</label>
+                <select id="difficulty" style="width:100%; padding:12px; background:#0f0f1a;
+                        border:1px solid #2a2a4a; border-radius:8px; color:white; font-size:15px;">
+                    <option value="mixed">Mixed</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Time Per Question (seconds)</label>
+                <select id="timer" style="width:100%; padding:12px; background:#0f0f1a;
+                        border:1px solid #2a2a4a; border-radius:8px; color:white; font-size:15px;">
+                    <option value="0">No Timer</option>
+                    <option value="15">15 Seconds</option>
+                    <option value="30" selected>30 Seconds</option>
+                    <option value="60">1 Minute</option>
+                    <option value="120">2 Minutes</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:15px; margin-top:10px;">
+                <button class="btn-submit" onclick="startQuiz()"
+                    style="flex:1;">Start Quiz 🚀</button>
+                <button onclick="closeModal()"
+                    style="flex:1; padding:14px; background:transparent; border:2px solid #6c63ff;
+                           color:#6c63ff; border-radius:8px; cursor:pointer; font-size:16px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by Saurav Kumar | IT Prep Hub 2026</p>
+    </footer>
+
+    <script>
+        let allTopics = [];
+        let selectedTopicId = null;
+
+        // Check login
+        window.onload = function() {
+            let user = JSON.parse(localStorage.getItem('user'));
+            if(user) {
+                document.getElementById('navUser').innerText = '👋 ' + user.name;
+                document.getElementById('logoutBtn').style.display = 'inline';
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('registerBtn').style.display = 'none';
+            }
+            loadTopics();
+        }
+
+        // Load topics from API
+        async function loadTopics() {
+            try {
+                let res = await fetch('http://localhost:5000/questions/topics');
+                let data = await res.json();
+
+                if(data.success) {
+                    allTopics = data.topics;
+                    showTopics(allTopics);
+                }
+            } catch(err) {
+                document.getElementById('topicsGrid').innerHTML =
+                    '<p style="color:#f44336;">Server not running! Please start the server.</p>';
+            }
+        }
+
+        // Show topics in grid
+        function showTopics(topics) {
+            let grid = document.getElementById('topicsGrid');
+
+            if(topics.length === 0) {
+                grid.innerHTML = '<p style="color:#aaaaaa;">No topics found!</p>';
+                return;
+            }
+
+            grid.innerHTML = topics.map(topic => `
+                <div class="topic-card" onclick="openModal(${topic.id})">
+                    <div class="icon">${topic.icon}</div>
+                    <h3>${topic.name}</h3>
+                    <span class="category-tag">${topic.category}</span>
+                </div>
+            `).join('');
+        }
+
+        // Filter topics by category
+        function filterTopics(category) {
+            // active button update
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if(category === 'All') {
+                showTopics(allTopics);
+            } else {
+                let filtered = allTopics.filter(t => t.category === category);
+                showTopics(filtered);
+            }
+        }
+
+        // Open quiz settings modal
+        function openModal(topicId) {
+            let user = JSON.parse(localStorage.getItem('user'));
+            if(!user) {
+                alert('Please login first!');
+                window.location.href = 'login.html';
+                return;
+            }
+            selectedTopicId = topicId;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Start quiz
+        function startQuiz() {
+            let count = document.getElementById('questionCount').value;
+            let diff = document.getElementById('difficulty').value;
+            let time = document.getElementById('timer').value;
+
+            // quiz page pe bhejo settings ke saath
+            window.location.href =
+                `quiz.html?topic=${selectedTopicId}&limit=${count}&difficulty=${diff}&timer=${time}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>
