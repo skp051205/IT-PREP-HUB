@@ -130,7 +130,9 @@ weekly_leaderboard
 rewards
 └── id, user_id, reward_type, reward_description, achieved_at
 
-## Project Structure
+---
+
+## 📂 Project Structure
 IT-Prep-Hub/
 │
 ├── backend/                  ← Node.js server
